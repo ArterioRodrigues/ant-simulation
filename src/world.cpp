@@ -11,9 +11,9 @@ World::World(int windowX, int windowY, float tileX, float tileY) {
       tile.shape.setSize(sf::Vector2f{tileX, tileY});
       tile.shape.setPosition(sf::Vector2f(i * tileX, j * tileY));
       tile.shape.setFillColor({255, 255, 255});
-      
-      tile.shape.setOutlineColor({0, 0, 0});
-      tile.shape.setOutlineThickness(1.0f);
+      tile.index = (i * windowX/ tileX) + j; 
+      //tile.shape.setOutlineColor({0, 0, 0});
+      //tile.shape.setOutlineThickness(1.0f);
       row.push_back(tile);
     }
     _tiles.push_back(row);

@@ -3,6 +3,7 @@
 
 struct Tile {
   sf::RectangleShape shape;
+  int index;
 };
 
 class World {

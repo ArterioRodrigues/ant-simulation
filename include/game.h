@@ -14,6 +14,7 @@ public:
 private:
   sf::RenderWindow _window;
   Ant _ant;
+  std::vector<int> _pheromoneTiles;
   int _x;
   int _y;
 };

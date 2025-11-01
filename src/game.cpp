@@ -2,7 +2,8 @@
 #include "configuration.h"
 
 Game::Game()
-    : _ant(Configuration::_tileX), _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
+    : _ant(Configuration::_tileX),
+      _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
   _x = Configuration::_windowX;
   _y = Configuration::_windowY;
 }
@@ -19,7 +20,7 @@ void Game::run(int frameRate) {
       timeSinceLastUpdate -= timePerFrame;
       update(timePerFrame);
     }
-    //update(timeSinceLastUpdate);
+    // update(timeSinceLastUpdate);
     render();
   }
 }
@@ -44,15 +45,26 @@ void Game::processEvents() {
   }
 }
 
-void Game::update(sf::Time deltaTime) {
-  _ant.update(deltaTime);
-}
+void Game::update(sf::Time deltaTime) { _ant.update(deltaTime); }
 
 void Game::render() {
   _window.clear();
 
   for (auto tiles : Configuration::world->getTiles()) {
     for (auto tile : tiles) {
+      sf::Vector2f tilePosition = tile.shape.getPosition();
+      sf::Vector2f antPosition = _ant.getPosition();
+
+      if (antPosition.x < tilePosition.x + Configuration::_tileX &&
+          antPosition.x > tilePosition.x &&
+          antPosition.y < tilePosition.y + Configuration::_tileY &&
+          antPosition.y > tilePosition.y) {
+        _pheromoneTiles.push_back(tile.index);
+      }
+      for(auto index: _pheromoneTiles) {
+        if(tile.index == index)
+          tile.shape.setFillColor({0, 255, 0});
+      }
       _window.draw(tile.shape);
     }
   }

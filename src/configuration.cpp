@@ -14,7 +14,7 @@ float Configuration::_tileY = 0.f;
 Configuration::Configuration() {
   Configuration::_windowX = 1000;
   Configuration::_windowY = 1000;
-  Configuration::_frameRate = 2;
+  Configuration::_frameRate = 144;
   Configuration::_tileX = 25;
   Configuration::_tileY = 25;
 
