@@ -6,7 +6,7 @@
 Ant::Ant(int movementDistance)
     : _sprite(Configuration::textures.get(Configuration::Textures::Ant)) {
   _sprite.setOrigin({16, 16});
-  _head = Direction::North;
+  _sprite.setPosition({12.5, 12.5});
   _movementDistance = movementDistance;
 }
 
@@ -54,8 +54,6 @@ void Ant::move(Direction direction) {
 }
 
 void Ant::rotate(Direction direction) {
-
-  if (_head == direction) return;
 
   switch (direction) {
   case Direction::North:

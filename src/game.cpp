@@ -2,7 +2,7 @@
 #include "configuration.h"
 
 Game::Game()
-    : _ant(Configuration::_tileX/2), _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
+    : _ant(Configuration::_tileX), _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
   _x = Configuration::_windowX;
   _y = Configuration::_windowY;
 }

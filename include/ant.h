@@ -26,6 +26,5 @@ private:
   void draw(sf::RenderTarget &target,
             sf::RenderStates states = sf::RenderStates::Default) const override;
   sf::Sprite _sprite;
-  Direction _head;
   int _movementDistance;
 };
