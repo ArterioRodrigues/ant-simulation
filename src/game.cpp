@@ -55,5 +55,6 @@ void Game::render() {
       _window.draw(tile.shape);
     }
   }
+  _window.draw(_player);
   _window.display();
 }

@@ -1,5 +1,4 @@
 #include "world.h"
-#include "configuration.h"
 
 World::World( int windowX, int windowY, float tileX, float tileY) {
   for (uint8_t i = 0; i < windowX/ tileX; i++) {
