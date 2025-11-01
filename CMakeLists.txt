@@ -37,7 +37,8 @@ src/configuration.cpp
 src/game.cpp
 src/main.cpp
 src/world.cpp
-src/player.cpp
+src/ant.cpp
+src/helper.cpp
 )
 target_include_directories(main PRIVATE 
     ${CMAKE_SOURCE_DIR}/include

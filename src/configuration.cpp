@@ -12,12 +12,12 @@ float Configuration::_tileX = 0.f;
 float Configuration::_tileY = 0.f;
 
 Configuration::Configuration() {
-  Configuration::_windowX = 500;
-  Configuration::_windowY = 500;
-  Configuration::_frameRate = 144;
+  Configuration::_windowX = 1000;
+  Configuration::_windowY = 1000;
+  Configuration::_frameRate = 10;
   Configuration::_tileX = 25;
   Configuration::_tileY = 25;
 
   Configuration::world = new World(_windowX, _windowY, _tileX, _tileY);
-  textures.load(Textures::Player, "media/player/ant.png");
+  textures.load(Textures::Ant, "media/player/ant.png");
 }

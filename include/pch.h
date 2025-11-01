@@ -14,6 +14,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -33,4 +34,4 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include <SFML/Graphics/Texture.hpp>
+

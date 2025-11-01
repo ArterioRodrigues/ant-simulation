@@ -2,25 +2,24 @@
 #include "configuration.h"
 
 Game::Game()
-    : _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
+    : _ant(Configuration::_tileX/2), _window(sf::VideoMode({Configuration::_windowX, Configuration::_windowY}), "ant simulation") {
   _x = Configuration::_windowX;
   _y = Configuration::_windowY;
 }
 
-void Game::run(int frame_per_seconds) {
+void Game::run(int frameRate) {
   sf::Clock clock;
   sf::Time timeSinceLastUpdate = sf::Time::Zero;
-  sf::Time TIME_PER_FRAME = sf::seconds(1.f / frame_per_seconds);
+  sf::Time timePerFrame = sf::seconds(1.f / frameRate);
   while (_window.isOpen()) {
     processEvents();
     timeSinceLastUpdate += clock.restart();
 
-    while (timeSinceLastUpdate > TIME_PER_FRAME) {
-      timeSinceLastUpdate -= TIME_PER_FRAME;
-      update(TIME_PER_FRAME);
+    while (timeSinceLastUpdate > timePerFrame) {
+      timeSinceLastUpdate -= timePerFrame;
+      update(timePerFrame);
     }
-
-    update(timeSinceLastUpdate);
+    //update(timeSinceLastUpdate);
     render();
   }
 }
@@ -45,7 +44,9 @@ void Game::processEvents() {
   }
 }
 
-void Game::update(sf::Time deltaTime) {}
+void Game::update(sf::Time deltaTime) {
+  _ant.update(deltaTime);
+}
 
 void Game::render() {
   _window.clear();
@@ -55,6 +56,6 @@ void Game::render() {
       _window.draw(tile.shape);
     }
   }
-  _window.draw(_player);
+  _window.draw(_ant);
   _window.display();
 }

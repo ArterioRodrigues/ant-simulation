@@ -6,6 +6,7 @@ class Configuration {
 public:
   enum Textures : int {
     Player,
+    Ant,
   };
 
   static ResourceManager<sf::Texture, int> textures;
