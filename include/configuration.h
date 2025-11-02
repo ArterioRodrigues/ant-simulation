@@ -12,10 +12,12 @@ public:
   static ResourceManager<sf::Texture, int> textures;
 
   static World *world;
-  static unsigned int _windowX;
-  static unsigned int _windowY;
-  static double _frameRate;
-  static float _tileX;
-  static float _tileY;
+  static unsigned int windowX;
+  static unsigned int windowY;
+  static double frameRate;
+  static float tileX;
+  static float tileY;
+  static int colonySize; 
+
   Configuration();
 };

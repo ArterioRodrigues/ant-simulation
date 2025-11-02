@@ -5,19 +5,21 @@
 ResourceManager<sf::Texture, int> Configuration::textures;
 
 World *Configuration::world = nullptr;
-unsigned int Configuration::_windowX = 0;
-unsigned int Configuration::_windowY = 0;
-double Configuration::_frameRate = 0;
-float Configuration::_tileX = 0.f;
-float Configuration::_tileY = 0.f;
+unsigned int Configuration::windowX = 0;
+unsigned int Configuration::windowY = 0;
+double Configuration::frameRate = 0;
+float Configuration::tileX = 0.f;
+float Configuration::tileY = 0.f;
+int Configuration::colonySize = 0;
 
 Configuration::Configuration() {
-  Configuration::_windowX = 1000;
-  Configuration::_windowY = 1000;
-  Configuration::_frameRate = 144;
-  Configuration::_tileX = 25;
-  Configuration::_tileY = 25;
+  Configuration::windowX = 1000;
+  Configuration::windowY = 1000;
+  Configuration::frameRate = 10;
+  Configuration::tileX = 25;
+  Configuration::tileY = 25;
+  Configuration::colonySize = 5;
 
-  Configuration::world = new World(_windowX, _windowY, _tileX, _tileY);
+  Configuration::world = new World(windowX, windowY, tileX, tileY);
   textures.load(Textures::Ant, "media/player/ant.png");
 }

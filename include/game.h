@@ -1,4 +1,5 @@
 #pragma once
+#include "colony.h"
 #include "pch.h"
 #include "ant.h"
 
@@ -13,7 +14,7 @@ public:
 
 private:
   sf::RenderWindow _window;
-  Ant _ant;
+  Colony _colony;
   std::vector<int> _pheromoneTiles;
   int _x;
   int _y;

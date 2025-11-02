@@ -3,10 +3,10 @@
 #include "helper.h"
 #include <SFML/System/Vector2.hpp>
 
-Ant::Ant(int movementDistance)
+Ant::Ant(int movementDistance, sf::Vector2f position)
     : _sprite(Configuration::textures.get(Configuration::Textures::Ant)) {
   _sprite.setOrigin({16, 16});
-  _sprite.setPosition({12.5, 12.5});
+  _sprite.setPosition(position);
   _movementDistance = movementDistance;
 }
 
@@ -36,18 +36,18 @@ void Ant::move(Direction direction) {
     rotate(Direction::West);
     break;
   case Direction::East:
-    if (position.x + _movementDistance > Configuration::_windowX) return;
+    if (position.x + _movementDistance > Configuration::windowX) return;
     _sprite.setPosition({position.x + _movementDistance, position.y});
     rotate(Direction::East);
     break;
   case Direction::South:
-    if (position.y + _movementDistance > Configuration::_windowY) return;
+    if (position.y + _movementDistance > Configuration::windowY) return;
     _sprite.setPosition({position.x, position.y + _movementDistance});
     rotate(Direction::South);
     break;
   case Direction::North:
     if (position.y - _movementDistance < 0) return;
-    _sprite.setPosition({position.y, position.y - _movementDistance});
+    _sprite.setPosition({position.x, position.y - _movementDistance});
     rotate(Direction::North);
     break;
   }

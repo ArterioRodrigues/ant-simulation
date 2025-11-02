@@ -39,6 +39,7 @@ src/main.cpp
 src/world.cpp
 src/ant.cpp
 src/helper.cpp
+src/colony.cpp
 )
 target_include_directories(main PRIVATE 
     ${CMAKE_SOURCE_DIR}/include
