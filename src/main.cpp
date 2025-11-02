@@ -4,6 +4,6 @@
 int main() {
   Configuration configuration;
   Game game;
-  game.run(Configuration::_frameRate);
+  game.run(Configuration::frameRate);
   return 0;
 }

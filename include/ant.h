@@ -12,7 +12,7 @@ class Ant : public sf::Drawable {
 public:
   Ant(const Ant &) = delete;
   Ant &operator=(const Ant &) = delete;
-  Ant(int movementDistance);
+  Ant(int movementDistance, sf::Vector2f position);
 
   void processEvent();
   void update(sf::Time deltaTime);
