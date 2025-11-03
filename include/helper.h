@@ -1,3 +1,3 @@
-
+#include "pch.h"
 int randomNumberGenerator(int start, int end);
-float randomNumberGenerator(float start, float end);
+int weightedRandomGenerator(const std::vector<uint8_t>& weights);

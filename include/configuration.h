@@ -11,13 +11,25 @@ public:
 
   static ResourceManager<sf::Texture, int> textures;
 
-  static World *world;
   static unsigned int windowX;
   static unsigned int windowY;
-  static double frameRate;
+
   static float tileX;
   static float tileY;
-  static int colonySize; 
 
+  static double frameRate;
+  static int colonySize;
+
+  static int foodCount;
+  static sf::Color foodColor;
+  static sf::Color toHomePheromoneColor;
+  static sf::Color toFoodPheromoneColor;
+  static sf::Color strongToHomePheromoneColor;
+  static sf::Color strongToFoodPheromoneColor;
+  static sf::Color normalColor;
+  static sf::Color colonyColor;
+  static sf::Color strongPheromoneColor;
+
+  static World *world;
   Configuration();
 };
