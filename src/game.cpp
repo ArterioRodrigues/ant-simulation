@@ -1,5 +1,6 @@
 #include "game.h"
 #include "configuration.h"
+#include "world.h"
 
 Game::Game()
     : _colony(Configuration::colonySize),
@@ -45,8 +46,8 @@ void Game::processEvents() {
   }
 }
 
-void Game::update(sf::Time deltaTime) { 
-  _colony.update(deltaTime); 
+void Game::update(sf::Time deltaTime) {
+  _colony.update(deltaTime);
   Configuration::world->update(deltaTime);
 }
 
@@ -61,11 +62,21 @@ void Game::render() {
 
   for (auto &ant : _colony.getAnts()) {
     sf::Vector2f antPosition = ant->getPosition();
-    Configuration::world->colorTile(antPosition, {0, 255, 0});
+    TileType type = Configuration::world->getTileType(antPosition);
+
+    if (type == TileType::Food) {
+      Configuration::world->decrementFood();
+      ant->incrementFood();
+    }
+
+    if (ant->type == AntType::Searching ) {
+      Configuration::world->setTileType(antPosition, TileType::ToHomePheromone);
+    } else {
+      Configuration::world->setTileType(antPosition, TileType::StrongToFoodPheromone);
+    }
     _window.draw(*ant);
   }
-
   sf::Vector2f colonyPosition = _colony.getPosition();
-  Configuration::world->colorTile(colonyPosition, {255, 0, 0});
+  Configuration::world->setTileType(colonyPosition, TileType::Colony);
   _window.display();
 }
