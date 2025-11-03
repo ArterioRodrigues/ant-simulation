@@ -22,10 +22,7 @@ public:
 
   static int foodCount;
   static sf::Color foodColor;
-  static sf::Color toHomePheromoneColor;
-  static sf::Color toFoodPheromoneColor;
-  static sf::Color strongToHomePheromoneColor;
-  static sf::Color strongToFoodPheromoneColor;
+  static sf::Color pheromoneColor;
   static sf::Color normalColor;
   static sf::Color colonyColor;
   static sf::Color strongPheromoneColor;

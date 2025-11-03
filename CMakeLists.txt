@@ -40,6 +40,7 @@ src/world.cpp
 src/ant.cpp
 src/helper.cpp
 src/colony.cpp
+src/text.cpp
 )
 target_include_directories(main PRIVATE 
     ${CMAKE_SOURCE_DIR}/include

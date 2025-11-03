@@ -3,10 +3,7 @@
 
 enum TileType {
   Normal,
-  ToHomePheromone,
-  ToFoodPheromone,
-  StrongToHomePheromone,
-  StrongToFoodPheromone,
+  Pheromone,
   Food,
   Colony,
 };
@@ -23,7 +20,7 @@ public:
   std::vector<std::vector<Tile>> getTiles();
 
   int collisionIndex(sf::Vector2f position);
-  void setTileType(sf::Vector2f position, TileType type = TileType::ToFoodPheromone);
+  void setTileType(sf::Vector2f position, TileType type = TileType::Pheromone);
   void update(sf::Time deltaTime);
   void decrementFood();
   TileType getTileType(sf::Vector2f position);

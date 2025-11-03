@@ -6,12 +6,14 @@
 
 Ant::Ant(int movementDistance, sf::Vector2f position, sf::Vector2f colonyPosition)
     : _sprite(Configuration::textures.get(Configuration::Textures::Ant)) {
+
+  type = AntType::Searching;
+
+  _foodCount = 0;
   _sprite.setOrigin({16, 16});
   _sprite.setPosition(position);
   _movementDistance = movementDistance;
-  _foodCount = 0;
   _colonyPosition = colonyPosition;
-  type = AntType::Searching;
 }
 
 void Ant::update(sf::Time deltaTime) {
@@ -27,10 +29,6 @@ void Ant::update(sf::Time deltaTime) {
       Configuration::world->getTile({position.x, position.y - Configuration::tileY});
 
   std::optional<Tile> antTile = Configuration::world->getTile(position);
-
-  if (antTile->type == TileType::Colony) {
-    _foodCount = 0;
-  }
 
   if (_foodCount) {
     type = AntType::Found;
@@ -51,10 +49,10 @@ void Ant::update(sf::Time deltaTime) {
   } else {
     type = AntType::Searching;
 
-    uint8_t eastWeight = eastTile.has_value() ? eastTile.value().shape.getFillColor().g : 255;
-    uint8_t westWeight = westTile.has_value() ? westTile.value().shape.getFillColor().g : 255;
-    uint8_t northWeight = northTile.has_value() ? northTile.value().shape.getFillColor().g : 255;
-    uint8_t southWeight = southTile.has_value() ? southTile.value().shape.getFillColor().g : 255;
+    uint8_t eastWeight = eastTile.has_value() ? eastTile.value().shape.getFillColor().b : 255;
+    uint8_t westWeight = westTile.has_value() ? westTile.value().shape.getFillColor().b : 255;
+    uint8_t northWeight = northTile.has_value() ? northTile.value().shape.getFillColor().b : 255;
+    uint8_t southWeight = southTile.has_value() ? southTile.value().shape.getFillColor().b : 255;
     eastWeight = 256 - eastWeight;
     westWeight = 256 - westWeight;
     northWeight = 256 - northWeight;
@@ -87,28 +85,33 @@ sf::Vector2f Ant::getPosition() { return _sprite.getPosition(); }
 void Ant::move(Direction direction) {
   sf::Vector2f position = _sprite.getPosition();
 
-  switch (direction) {
-  case Direction::West:
-    if (position.x - _movementDistance < 0) return;
-    _sprite.setPosition({position.x - _movementDistance, position.y});
-    rotate(Direction::West);
-    break;
-  case Direction::East:
-    if (position.x + _movementDistance > Configuration::windowX) return;
-    _sprite.setPosition({position.x + _movementDistance, position.y});
-    rotate(Direction::East);
-    break;
-  case Direction::South:
-    if (position.y + _movementDistance > Configuration::windowY) return;
-    _sprite.setPosition({position.x, position.y + _movementDistance});
-    rotate(Direction::South);
-    break;
-  case Direction::North:
-    if (position.y - _movementDistance < 0) return;
-    _sprite.setPosition({position.x, position.y - _movementDistance});
-    rotate(Direction::North);
-    break;
-  }
+ // switch (direction) {
+ // case Direction::North:
+ //   if (position.y - _movementDistance < 0) return;
+ //   _sprite.setPosition({position.x, position.y - _movementDistance});
+ //   rotate(Direction::North);
+ //   break;
+ // case Direction::NorthEast:
+ //   if (position.x + _movementDistance > Configuration::windowX) return;
+ //   _sprite.setPosition({position.x + _movementDistance, position.y});
+ //   rotate(Direction::East);
+ //   break;
+ // case Direction::East:
+ //   if (position.x + _movementDistance > Configuration::windowX) return;
+ //   _sprite.setPosition({position.x + _movementDistance, position.y});
+ //   rotate(Direction::East);
+ //   break;
+ // case Direction::West:
+ //   if (position.x - _movementDistance < 0) return;
+ //   _sprite.setPosition({position.x - _movementDistance, position.y});
+ //   rotate(Direction::West);
+ //   break;
+ // case Direction::South:
+ //   if (position.y + _movementDistance > Configuration::windowY) return;
+ //   _sprite.setPosition({position.x, position.y + _movementDistance});
+ //   rotate(Direction::South);
+ //   break;
+ // }
 }
 
 void Ant::rotate(Direction direction) {
@@ -128,4 +131,6 @@ void Ant::rotate(Direction direction) {
     break;
   }
 }
-void Ant::incrementFood() { _foodCount++; }
+
+void Ant::setFoodCount(int foodCount) { _foodCount = foodCount; }
+int Ant::getFoodCount() { return _foodCount; }

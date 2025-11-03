@@ -59,36 +59,16 @@ void World::setTileType(sf::Vector2f position, TileType type) {
     _tiles[x][y].shape.setFillColor(Configuration::foodColor);
     _tiles[x][y].type = type;
     break;
-  case TileType::ToHomePheromone:
-    if (_tiles[x][y].type != TileType::Food && _tiles[x][y].type != TileType::Colony) {
-      _tiles[x][y].shape.setFillColor(Configuration::toHomePheromoneColor);
-      _tiles[x][y].type = type;
-    }
-    break;
-  case TileType::ToFoodPheromone:
-    if (_tiles[x][y].type != TileType::Food && _tiles[x][y].type != TileType::Colony) {
-      _tiles[x][y].shape.setFillColor(Configuration::toFoodPheromoneColor);
-      _tiles[x][y].type = type;
-    }
-    break;
-  case TileType::StrongToHomePheromone:
-    if (_tiles[x][y].type != TileType::Food && _tiles[x][y].type != TileType::Colony) {
-      _tiles[x][y].shape.setFillColor(Configuration::strongToHomePheromoneColor);
-      _tiles[x][y].type = type;
-    }
-    break;
-  case TileType::StrongToFoodPheromone:
-    if (_tiles[x][y].type != TileType::Food && _tiles[x][y].type != TileType::Colony) {
-      _tiles[x][y].shape.setFillColor(Configuration::strongToFoodPheromoneColor);
-      _tiles[x][y].type = type;
-    }
-    break;
   case TileType::Normal:
     _tiles[x][y].shape.setFillColor(Configuration::normalColor);
     _tiles[x][y].type = type;
     break;
   case TileType::Colony:
     _tiles[x][y].shape.setFillColor(Configuration::colonyColor);
+    _tiles[x][y].type = type;
+    break;
+  case TileType::Pheromone:
+    _tiles[x][y].shape.setFillColor(Configuration::pheromoneColor);
     _tiles[x][y].type = type;
     break;
   }
@@ -101,46 +81,19 @@ TileType World::getTileType(sf::Vector2f position) {
   return _tiles[x][y].type;
 }
 
-void World::decrementFood() { _foodCount = std::min(0, _foodCount - 1); }
+void World::decrementFood() { _foodCount = std::max(0, _foodCount - 1); }
 void World::update(sf::Time deltaTime) {
- // for (int i = 0; i < Configuration::foodCount - _foodCount; i++) {
- //   float x = float(randomNumberGenerator(0, _worldX));
- //   float y = float(randomNumberGenerator(0, _worldY));
- //   _foodCount++;
- //   //setTileType({x, y}, TileType::Food);
- // }
+   for (int i = 0; i < std::max(0, Configuration::foodCount - _foodCount); i++) {
+     float x = float(randomNumberGenerator(0, _worldX));
+     float y = float(randomNumberGenerator(0, _worldY));
+    setTileType({x, y}, TileType::Food);
+   }
+   _foodCount = Configuration::foodCount;
 
   for (uint8_t i = 0; i < _tiles.size(); i++) {
     for (uint8_t j = 0; j < _tiles[0].size(); j++) {
 
-      if (_tiles[i][j].type == TileType::ToHomePheromone) {
-        sf::Color color = _tiles[i][j].shape.getFillColor();
-        color.r = std::min(255, color.r + 5);
-        color.b = std::min(255, color.b + 5);
-        _tiles[i][j].shape.setFillColor(color);
-
-        if (color.r >= 255 && color.g >= 255 && color.b >= 255) {
-          _tiles[i][j].type = TileType::Normal;
-        }
-      } else if (_tiles[i][j].type == TileType::ToFoodPheromone) {
-        sf::Color color = _tiles[i][j].shape.getFillColor();
-        color.r = std::min(255, color.r + 5);
-        color.g = std::min(255, color.g + 5);
-        _tiles[i][j].shape.setFillColor(color);
-
-        if (color.r >= 255 && color.g >= 255 && color.b >= 255) {
-          _tiles[i][j].type = TileType::Normal;
-        }
-      } else if (_tiles[i][j].type == TileType::StrongToHomePheromone) {
-        sf::Color color = _tiles[i][j].shape.getFillColor();
-        color.r = std::min(255, color.r + 2);
-        color.b = std::min(255, color.b + 2);
-        _tiles[i][j].shape.setFillColor(color);
-
-        if (color.r >= 255 && color.g >= 255 && color.b >= 255) {
-          _tiles[i][j].type = TileType::Normal;
-        }
-      } else if (_tiles[i][j].type == TileType::StrongToFoodPheromone) {
+      if (_tiles[i][j].type == TileType::Pheromone) {
         sf::Color color = _tiles[i][j].shape.getFillColor();
         color.r = std::min(255, color.r + 2);
         color.g = std::min(255, color.g + 2);

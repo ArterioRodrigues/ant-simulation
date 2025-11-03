@@ -1,6 +1,9 @@
 #include "game.h"
+#include "text.h"
 #include "configuration.h"
 #include "world.h"
+#include <SFML/Graphics/Font.hpp>
+#include <string>
 
 Game::Game()
     : _colony(Configuration::colonySize),
@@ -52,7 +55,12 @@ void Game::update(sf::Time deltaTime) {
 }
 
 void Game::render() {
+  Text text(std::to_string(_colony.getFoodCount()));
+  sf::Vector2f colonyPosition = _colony.getPosition(); 
+  Configuration::world->setTileType(colonyPosition, TileType::Colony);
+
   _window.clear();
+
 
   for (auto tiles : Configuration::world->getTiles()) {
     for (auto tile : tiles) {
@@ -63,20 +71,26 @@ void Game::render() {
   for (auto &ant : _colony.getAnts()) {
     sf::Vector2f antPosition = ant->getPosition();
     TileType type = Configuration::world->getTileType(antPosition);
+    int antFoodCount = ant->getFoodCount();
 
     if (type == TileType::Food) {
+      ant->setFoodCount(antFoodCount + 1);
       Configuration::world->decrementFood();
-      ant->incrementFood();
+      Configuration::world->setTileType(antPosition, TileType::Pheromone);
     }
 
-    if (ant->type == AntType::Searching ) {
-      Configuration::world->setTileType(antPosition, TileType::ToHomePheromone);
-    } else {
-      Configuration::world->setTileType(antPosition, TileType::StrongToFoodPheromone);
+    else if (type == TileType::Colony && antFoodCount) {
+      ant->setFoodCount(0);
+      _colony.setFoodCount(_colony.getFoodCount() + antFoodCount);
+    } 
+
+    if (ant->type == AntType::Found) {
+      Configuration::world->setTileType(antPosition, TileType::Pheromone);
     }
+
     _window.draw(*ant);
   }
-  sf::Vector2f colonyPosition = _colony.getPosition();
-  Configuration::world->setTileType(colonyPosition, TileType::Colony);
+  
+  _window.draw(text); 
   _window.display();
 }

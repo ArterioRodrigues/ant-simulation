@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include <SFML/System/Vector2.hpp>
 
 enum AntType {
   Searching,
@@ -9,9 +8,13 @@ enum AntType {
 
 enum Direction {
   North = 0,
-  East = 1,
-  South = 2,
-  West = 3,
+  NorthEast = 1,
+  East = 2,
+  SouthEast = 3,
+  South = 4,
+  SouthWest = 5,
+  West = 6,
+  NorthWest = 7,
 };
 
 class Ant : public sf::Drawable {
@@ -24,7 +27,8 @@ public:
   void update(sf::Time deltaTime);
 
   void move(Direction direction);
-  void incrementFood();
+  void setFoodCount(int foodCount);
+  int getFoodCount();
   sf::Vector2f getPosition();
 
   void rotate(Direction direction);
