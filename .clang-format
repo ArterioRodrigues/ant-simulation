@@ -1,4 +1,4 @@
 BasedOnStyle: LLVM
-ColumnLimit: 100
+ColumnLimit: 160
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true

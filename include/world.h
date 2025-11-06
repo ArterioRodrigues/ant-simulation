@@ -4,6 +4,7 @@
 enum TileType {
   Normal,
   Pheromone,
+  SearchingPheromone,
   Food,
   Colony,
 };
@@ -33,5 +34,6 @@ private:
   int _foodCount;
   float _tileX;
   float _tileY;
+  sf::Time _deltaTime;
   std::vector<std::vector<Tile>> _tiles;
 };

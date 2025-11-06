@@ -4,16 +4,23 @@
 Colony::Colony(int size, const sf::Vector2f spawnPoint) {
   _size = size;
   _spawnPoint = spawnPoint;
+  _foodCount = 0;
 
   for (int i = 0; i < size; i++) {
-    int x = spawnPoint.x - randomNumberGenerator(spawnPoint.x - 10, spawnPoint.x);
-    int y = spawnPoint.y - randomNumberGenerator(spawnPoint.y - 10, spawnPoint.y);
-    sf::Vector2f position(x, y);
-    Ant *ant = new Ant(Configuration::tileX / 4, spawnPoint, spawnPoint);
+    float x = spawnPoint.x + randomNumberGenerator(-25, 25);
+    float y = spawnPoint.y + randomNumberGenerator(-25, 25);
+
+    Ant *ant = new Ant(Configuration::tileX / 4, {x, y}, spawnPoint);
     _ants.push_back(ant);
   }
 }
 
+Colony::~Colony() {
+  for (auto ant : _ants) {
+    delete ant;
+  }
+  _ants.clear();
+}
 std::vector<Ant *> Colony::getAnts() { return _ants; }
 
 void Colony::update(sf::Time deltaTime) {

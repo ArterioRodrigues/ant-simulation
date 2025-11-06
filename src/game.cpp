@@ -1,12 +1,12 @@
 #include "game.h"
-#include "text.h"
 #include "configuration.h"
+#include "text.h"
 #include "world.h"
 #include <SFML/Graphics/Font.hpp>
 #include <string>
 
 Game::Game()
-    : _colony(Configuration::colonySize),
+    : _colony(Configuration::colonySize, sf::Vector2f(Configuration::windowX / 2.0f, Configuration::windowY / 2.0f)),
       _window(sf::VideoMode({Configuration::windowX, Configuration::windowY}), "ant simulation") {
   _x = Configuration::windowX;
   _y = Configuration::windowY;
@@ -24,7 +24,6 @@ void Game::run(int frameRate) {
       timeSinceLastUpdate -= timePerFrame;
       update(timePerFrame);
     }
-    // update(timeSinceLastUpdate);
     render();
   }
 }
@@ -56,11 +55,10 @@ void Game::update(sf::Time deltaTime) {
 
 void Game::render() {
   Text text(std::to_string(_colony.getFoodCount()));
-  sf::Vector2f colonyPosition = _colony.getPosition(); 
+  sf::Vector2f colonyPosition = _colony.getPosition();
   Configuration::world->setTileType(colonyPosition, TileType::Colony);
 
   _window.clear();
-
 
   for (auto tiles : Configuration::world->getTiles()) {
     for (auto tile : tiles) {
@@ -69,28 +67,9 @@ void Game::render() {
   }
 
   for (auto &ant : _colony.getAnts()) {
-    sf::Vector2f antPosition = ant->getPosition();
-    TileType type = Configuration::world->getTileType(antPosition);
-    int antFoodCount = ant->getFoodCount();
-
-    if (type == TileType::Food) {
-      ant->setFoodCount(antFoodCount + 1);
-      Configuration::world->decrementFood();
-      Configuration::world->setTileType(antPosition, TileType::Pheromone);
-    }
-
-    else if (type == TileType::Colony && antFoodCount) {
-      ant->setFoodCount(0);
-      _colony.setFoodCount(_colony.getFoodCount() + antFoodCount);
-    } 
-
-    if (ant->type == AntType::Found) {
-      Configuration::world->setTileType(antPosition, TileType::Pheromone);
-    }
-
     _window.draw(*ant);
   }
-  
-  _window.draw(text); 
+
+  _window.draw(text);
   _window.display();
 }

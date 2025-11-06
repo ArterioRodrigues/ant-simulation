@@ -26,22 +26,29 @@ public:
   void processEvent();
   void update(sf::Time deltaTime);
 
-  void move(Direction direction);
+  bool move(int distance, sf::Angle angle = sf::degrees(0));
   void setFoodCount(int foodCount);
   int getFoodCount();
+  float getAngleFromDirection(Direction &direction);
+  Direction getDirectionFromAngle(float angle);
+
   sf::Vector2f getPosition();
 
-  void rotate(Direction direction);
-  void returnHome(); 
+  void returnHome();
   AntType type;
 
   Direction getDirectionToward(sf::Vector2f target);
+  float nextSearchAngle();
+
 private:
-  void draw(sf::RenderTarget &target,
-            sf::RenderStates states = sf::RenderStates::Default) const override;
-  int _movementDistance;
+  void draw(sf::RenderTarget &target, sf::RenderStates states = sf::RenderStates::Default) const override;
+
   int _foodCount;
-  sf::Vector2f _colonyPosition;
+  int _movementDistance;
+
   sf::Sprite _sprite;
+  sf::Vector2f _colonyPosition;
+  sf::Vector2f _foodPosition;
+
   Direction _lastDirection;
 };

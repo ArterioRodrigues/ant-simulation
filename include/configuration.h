@@ -26,6 +26,7 @@ public:
   static sf::Color normalColor;
   static sf::Color colonyColor;
   static sf::Color strongPheromoneColor;
+  static sf::Color searchingColor;
 
   static World *world;
   Configuration();
