@@ -1,108 +1,132 @@
 #include "world.h"
 #include "configuration.h"
 #include "helper.h"
-#include <SFML/System/Vector2.hpp>
-#include <optional>
 
-World::World(int windowX, int windowY, float tileX, float tileY, int foodCount) {
-  _tileX = tileX;
-  _tileY = tileY;
+int World::_id = 0;
+
+World::World(int windowX, int windowY, int colonySize, int foodCount)
+    : _colony(colonySize,
+              sf::Vector2f({float(randomNumberGenerator(0, windowX)), float(randomNumberGenerator(0, windowY))})) {
   _worldX = windowX;
   _worldY = windowY;
   _foodCount = foodCount;
-  for (uint8_t i = 0; i < windowX / tileX; i++) {
-    std::vector<Tile> row;
-    for (uint8_t j = 0; j < windowY / tileY; j++) {
-      Tile tile;
 
-      tile.shape.setSize(sf::Vector2f{tileX, tileY});
-      tile.shape.setPosition(sf::Vector2f(i * tileX, j * tileY));
-      tile.shape.setFillColor({255, 255, 255});
+  _deltaTime = sf::Time::Zero;
 
-      tile.type = TileType::Normal;
-      tile.index = (i * windowX / tileX) + j;
+  sf::Vector2f colonyPosition = _colony.getPosition();
 
-      // tile.shape.setOutlineColor({0, 0, 0});
-      // tile.shape.setOutlineThickness(1.0f);
-      row.push_back(tile);
+  _colonyEntity.circle.setRadius(30);
+  _colonyEntity.circle.setOrigin({30, 30});
+  _colonyEntity.circle.setFillColor(Configuration::colonyColor);
+  _colonyEntity.circle.setPosition(colonyPosition);
+  _colonyEntity.type = EntityTypes::Colony;
+  _colonyEntity.id = _id++;
+
+  for (int i = 0; i < foodCount; i++) {
+    sf::Vector2f circlePosition({float(randomNumberGenerator(0, windowX)), float(randomNumberGenerator(0, windowY))});
+    for (int j = 0; j < 30; j++) {
+      Entity food;
+      food.circle.setRadius(Configuration::foodSize);
+      food.circle.setFillColor(Configuration::foodColor);
+      food.circle.setPosition(
+          {circlePosition.x + randomNumberGenerator(-20, 20), circlePosition.y + randomNumberGenerator(-20, 20)});
+      food.id = _id++;
+      _entities.emplace(food.id, food);
     }
-    _tiles.push_back(row);
-  }
-
-  for (int i = 0; i < Configuration::foodCount; i++) {
-    float x = float(randomNumberGenerator(0, windowX));
-    float y = float(randomNumberGenerator(0, windowY));
-    setTileType({x, y}, TileType::Food);
   }
 }
-std::vector<std::vector<Tile>> World::getTiles() { return _tiles; }
 
-int World::collisionIndex(sf::Vector2f position) {
-  return int(position.x / _tileX * _worldX / _tileX) + int(position.y / _tileY);
-}
+void World::setPhemromone(sf::Vector2f position, enum Pheromones type) {
+  Entity pheromone;
 
-std::optional<Tile> World::getTile(sf::Vector2f position) {
-
-  int x = position.x / _tileX;
-  int y = position.y / _tileY;
-  if (x >= _tiles.size() || y >= _tiles.size()) {
-    return std::nullopt;
-  }
-
-  return _tiles[x][y];
-}
-void World::setTileType(sf::Vector2f position, TileType type) {
-  int x = position.x / _tileX;
-  int y = position.y / _tileY;
   switch (type) {
-  case TileType::Food:
-    _tiles[x][y].shape.setFillColor(Configuration::foodColor);
-    _tiles[x][y].type = type;
+  case Pheromones::toFood:
+    pheromone.circle.setRadius(1);
+    pheromone.circle.setFillColor(Configuration::foodColor);
+    pheromone.circle.setPosition(position);
+    pheromone.type = EntityTypes::Pheromones;
+    pheromone.id = _id++;
+    _toFoodPheromones.emplace(pheromone.id, pheromone);
     break;
-  case TileType::Normal:
-    _tiles[x][y].shape.setFillColor(Configuration::normalColor);
-    _tiles[x][y].type = type;
-    break;
-  case TileType::Colony:
-    _tiles[x][y].shape.setFillColor(Configuration::colonyColor);
-    _tiles[x][y].type = type;
-    break;
-  case TileType::Pheromone:
-    _tiles[x][y].shape.setFillColor(Configuration::pheromoneColor);
-    _tiles[x][y].type = type;
+  case Pheromones::toHome:
+    pheromone.circle.setRadius(1);
+    pheromone.circle.setFillColor(Configuration::colonyColor);
+    pheromone.circle.setPosition(position);
+    pheromone.type = EntityTypes::Pheromones;
+    pheromone.id = _id++;
+    _toHomePheromones.emplace(pheromone.id, pheromone);
     break;
   }
 }
 
-TileType World::getTileType(sf::Vector2f position) {
-  int x = position.x / _tileX;
-  int y = position.y / _tileY;
-
-  return _tiles[x][y].type;
-}
-
-void World::decrementFood() { _foodCount = std::max(0, _foodCount - 1); }
-void World::update(sf::Time deltaTime) {
-   for (int i = 0; i < std::max(0, Configuration::foodCount - _foodCount); i++) {
-     float x = float(randomNumberGenerator(0, _worldX));
-     float y = float(randomNumberGenerator(0, _worldY));
-    setTileType({x, y}, TileType::Food);
-   }
-   _foodCount = Configuration::foodCount;
-
-  for (uint8_t i = 0; i < _tiles.size(); i++) {
-    for (uint8_t j = 0; j < _tiles[0].size(); j++) {
-
-      if (_tiles[i][j].type == TileType::Pheromone) {
-        sf::Color color = _tiles[i][j].shape.getFillColor();
-        color.r = std::min(255, color.r + 2);
-        color.g = std::min(255, color.g + 2);
-        _tiles[i][j].shape.setFillColor(color);
-
-        if (color.r >= 255 && color.g >= 255 && color.b >= 255) {
-          _tiles[i][j].type = TileType::Normal;
-        }
+float World::getPheromoneStrength(sf::Vector2f position, enum Pheromones pheromone, int radius) {
+  if (pheromone == Pheromones::toFood) {
+    for (auto pheromones : _toFoodPheromones) {
+      sf::Vector2f pheromonesPosition = pheromones.second.circle.getPosition();
+      if (position.x > pheromonesPosition.x - radius && position.x < pheromonesPosition.x + radius &&
+          position.y > pheromonesPosition.y - radius && position.y < pheromonesPosition.y + radius) {
+        sf::Color color = pheromones.second.circle.getFillColor();
+        return color.r + color.b + color.g;
       }
     }
+  } else {
+    for (auto pheromones : _toHomePheromones) {
+      sf::Vector2f pheromonesPosition = pheromones.second.circle.getPosition();
+      if (position.x > pheromonesPosition.x - radius && position.x < pheromonesPosition.x + radius &&
+          position.y > pheromonesPosition.y - radius && position.y < pheromonesPosition.y + radius) {
+        sf::Color color = pheromones.second.circle.getFillColor();
+        return color.r + color.b + color.g;
+      }
+    }
+   
+
+  return 0;
+}
+
+std::unordered_map<int, Entity> World::getEntities() { return _entities; }
+std::unordered_map<int, Entity> World::getToHomePheromones() { return _toHomePheromones; }
+std::unordered_map<int, Entity> World::getToFoodPheromones() { return _toFoodPheromones; }
+
+void World::decrementFood(int index) { _entities.erase(index); }
+void World::update(sf::Time deltaTime) {
+  _colony.update(deltaTime);
+  _deltaTime = sf::Time::Zero;
+
+  std::vector<int> toRemove = {};
+
+  for (auto pheromones : _toFoodPheromones) {
+    int index = pheromones.first;
+    sf::Color color = pheromones.second.circle.getFillColor();
+    color.r = std::min(255, color.r + 1);
+    color.g = std::min(255, color.g + 1);
+    color.b = std::min(255, color.b + 1);
+
+    _toFoodPheromones[index].circle.setFillColor(color);
+
+    if (color.r == 255 && color.g == 255 && color.b == 255) {
+      toRemove.push_back(index);
+    }
+  }
+
+  for (auto pheromones : _toHomePheromones) {
+    int index = pheromones.first;
+    sf::Color color = pheromones.second.circle.getFillColor();
+    color.r = std::min(255, color.r + 1);
+    color.g = std::min(255, color.g + 1);
+    color.b = std::min(255, color.b + 1);
+
+    _toFoodPheromones[index].circle.setFillColor(color);
+
+    if (color.r == 255 && color.g == 255 && color.b == 255) {
+      toRemove.push_back(index);
+    }
+  }
+
+  for (auto index : toRemove) {
+    _toFoodPheromones.erase(index);
   }
 }
+
+int World::getFoodCount() { return 0; }
+class Colony World::getColony() { return _colony; }
+Entity World::getColonyEntity() { return _colonyEntity; }

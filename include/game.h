@@ -1,8 +1,5 @@
 #pragma once
-#include "colony.h"
 #include "pch.h"
-#include "ant.h"
-#include "world.h"
 
 class Game {
 public:
@@ -15,7 +12,6 @@ public:
 
 private:
   sf::RenderWindow _window;
-  class Colony _colony;
   std::vector<int> _pheromoneTiles;
   int _x;
   int _y;

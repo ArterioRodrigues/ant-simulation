@@ -1,13 +1,9 @@
 #include "game.h"
-#include "text.h"
 #include "configuration.h"
+#include "text.h"
 #include "world.h"
-#include <SFML/Graphics/Font.hpp>
-#include <string>
 
-Game::Game()
-    : _colony(Configuration::colonySize),
-      _window(sf::VideoMode({Configuration::windowX, Configuration::windowY}), "ant simulation") {
+Game::Game() : _window(sf::VideoMode({Configuration::windowX, Configuration::windowY}), "ant simulation") {
   _x = Configuration::windowX;
   _y = Configuration::windowY;
 }
@@ -49,48 +45,34 @@ void Game::processEvents() {
   }
 }
 
-void Game::update(sf::Time deltaTime) {
-  _colony.update(deltaTime);
-  Configuration::world->update(deltaTime);
-}
+void Game::update(sf::Time deltaTime) { Configuration::world->update(deltaTime); }
 
 void Game::render() {
-  Text text(std::to_string(_colony.getFoodCount()));
-  sf::Vector2f colonyPosition = _colony.getPosition(); 
-  Configuration::world->setTileType(colonyPosition, TileType::Colony);
+  Text text(std::to_string(Configuration::world->getFoodCount()));
 
   _window.clear();
 
-
-  for (auto tiles : Configuration::world->getTiles()) {
-    for (auto tile : tiles) {
-      _window.draw(tile.shape);
+  if (Configuration::toFoodPheromones) {
+    for (auto entity : Configuration::world->getToFoodPheromones()) {
+      _window.draw(entity.second.circle);
     }
   }
 
-  for (auto &ant : _colony.getAnts()) {
+  if (Configuration::toHomePheromones) {
+    for (auto entity : Configuration::world->getToHomePheromones()) {
+      _window.draw(entity.second.circle);
+    }
+  }
+
+  for (auto entity : Configuration::world->getEntities()) {
+    _window.draw(entity.second.circle);
+  }
+
+  for (auto &ant : Configuration::world->getColony().getAnts()) {
     sf::Vector2f antPosition = ant->getPosition();
-    TileType type = Configuration::world->getTileType(antPosition);
-    int antFoodCount = ant->getFoodCount();
-
-    if (type == TileType::Food) {
-      ant->setFoodCount(antFoodCount + 1);
-      Configuration::world->decrementFood();
-      Configuration::world->setTileType(antPosition, TileType::Pheromone);
-    }
-
-    else if (type == TileType::Colony && antFoodCount) {
-      ant->setFoodCount(0);
-      _colony.setFoodCount(_colony.getFoodCount() + antFoodCount);
-    } 
-
-    if (ant->type == AntType::Found) {
-      Configuration::world->setTileType(antPosition, TileType::Pheromone);
-    }
-
     _window.draw(*ant);
   }
-  
-  _window.draw(text); 
+  _window.draw(Configuration::world->getColonyEntity().circle);
+  _window.draw(text);
   _window.display();
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <SFML/Graphics/CircleShape.hpp>
 
 enum AntType {
   Searching,
@@ -26,22 +27,29 @@ public:
   void processEvent();
   void update(sf::Time deltaTime);
 
-  void move(Direction direction);
+  bool move(int distance, sf::Angle angle);
   void setFoodCount(int foodCount);
   int getFoodCount();
+  void followPheromones();
   sf::Vector2f getPosition();
 
   void rotate(Direction direction);
-  void returnHome(); 
+  void returnHome();
   AntType type;
 
   Direction getDirectionToward(sf::Vector2f target);
+  Direction getDirectionFromAngle(float angle);
+
 private:
-  void draw(sf::RenderTarget &target,
-            sf::RenderStates states = sf::RenderStates::Default) const override;
+  void draw(sf::RenderTarget &target, sf::RenderStates states = sf::RenderStates::Default) const override;
+
   int _movementDistance;
   int _foodCount;
+  int _weight;
+
   sf::Vector2f _colonyPosition;
   sf::Sprite _sprite;
+  sf::Time _deltaTime;
+  sf::CircleShape _food;
   Direction _lastDirection;
 };

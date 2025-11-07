@@ -33,14 +33,14 @@ message(STATUS "Python include dir: ${Python3_INCLUDE_DIRS}")
 message(STATUS "NumPy include dir: ${NUMPY_INCLUDE_DIR}")
 
 add_executable(main 
-src/configuration.cpp
-src/game.cpp
-src/main.cpp
-src/world.cpp
-src/ant.cpp
-src/helper.cpp
-src/colony.cpp
-src/text.cpp
+  src/configuration.cpp
+  src/game.cpp
+  src/main.cpp
+  src/world.cpp
+  src/ant.cpp
+  src/helper.cpp
+  src/colony.cpp
+  src/text.cpp
 )
 target_include_directories(main PRIVATE 
     ${CMAKE_SOURCE_DIR}/include

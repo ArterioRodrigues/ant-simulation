@@ -1,37 +1,53 @@
 #pragma once
-#include "pch.h"
+#include "colony.h"
+#include <SFML/System/Vector2.hpp>
+#include <unordered_map>
 
-enum TileType {
-  Normal,
-  Pheromone,
-  Food,
+enum EntityTypes {
+  Pheromones,
   Colony,
+  Food,
 };
 
-struct Tile {
-  sf::RectangleShape shape;
-  int index;
-  TileType type;
+enum Pheromones {
+  toHome,
+  toFood,
+};
+
+struct Entity {
+  sf::CircleShape circle;
+  EntityTypes type;
+  int id;
 };
 
 class World {
 public:
-  World(int windowX, int windowY, float tileX, float tileY, int foodCount = 5);
-  std::vector<std::vector<Tile>> getTiles();
+  World(int windowX, int windowY, int colonySize = 10, int foodCount = 5);
+  std::unordered_map<int, Entity> getEntities();
+  std::unordered_map<int, Entity> getToHomePheromones();
+  std::unordered_map<int, Entity> getToFoodPheromones();
 
-  int collisionIndex(sf::Vector2f position);
-  void setTileType(sf::Vector2f position, TileType type = TileType::Pheromone);
+  float getPheromoneStrength(sf::Vector2f position, enum Pheromones pheromone, int radius = 1);
+  Entity getColonyEntity();
+  class Colony getColony();
+
+  void setPhemromone(sf::Vector2f position, enum Pheromones type = Pheromones::toFood);
   void update(sf::Time deltaTime);
-  void decrementFood();
-  TileType getTileType(sf::Vector2f position);
+  void decrementFood(int index);
 
-  std::optional<Tile> getTile(sf::Vector2f position);
+  int getFoodCount();
 
 private:
   int _worldX;
   int _worldY;
   int _foodCount;
-  float _tileX;
-  float _tileY;
-  std::vector<std::vector<Tile>> _tiles;
+  
+  sf::Time _deltaTime;
+
+  static int _id;
+  Entity _colonyEntity;
+  class Colony _colony;
+  std::unordered_map<int, Entity> _entities;
+  std::unordered_map<int, Entity> _toFoodPheromones;
+  std::unordered_map<int, Entity> _toHomePheromones;
 };

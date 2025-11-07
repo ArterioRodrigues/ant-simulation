@@ -10,6 +10,7 @@ Text::Text(std::string content): _text(_font)  {
   _text.setStyle(sf::Text::Bold);
   _text.setPosition({30, 30});
 }
+
 void Text::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   target.draw(_text, states);
 }

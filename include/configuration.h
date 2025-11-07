@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "resourceManager.h"
 #include "world.h"
 
@@ -8,24 +9,24 @@ public:
     Player,
     Ant,
   };
-
   static ResourceManager<sf::Texture, int> textures;
 
   static unsigned int windowX;
   static unsigned int windowY;
 
-  static float tileX;
-  static float tileY;
-
   static double frameRate;
   static int colonySize;
+  static int foodSize;
 
+  static int movementDistance;
   static int foodCount;
+
+  static bool toHomePheromones;
+  static bool toFoodPheromones;
+
   static sf::Color foodColor;
-  static sf::Color pheromoneColor;
-  static sf::Color normalColor;
   static sf::Color colonyColor;
-  static sf::Color strongPheromoneColor;
+  static sf::Color normalColor;
 
   static World *world;
   Configuration();

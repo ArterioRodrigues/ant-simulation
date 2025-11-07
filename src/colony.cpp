@@ -1,15 +1,16 @@
 #include "colony.h"
 #include "configuration.h"
 #include "helper.h"
+
 Colony::Colony(int size, const sf::Vector2f spawnPoint) {
   _size = size;
   _spawnPoint = spawnPoint;
 
   for (int i = 0; i < size; i++) {
-    int x = spawnPoint.x - randomNumberGenerator(spawnPoint.x - 10, spawnPoint.x);
-    int y = spawnPoint.y - randomNumberGenerator(spawnPoint.y - 10, spawnPoint.y);
+    int x = spawnPoint.x - randomNumberGenerator(-50, 50);
+    int y = spawnPoint.y - randomNumberGenerator(-50, 50);
     sf::Vector2f position(x, y);
-    Ant *ant = new Ant(Configuration::tileX / 4, spawnPoint, spawnPoint);
+    Ant *ant = new Ant(Configuration::movementDistance, position, spawnPoint);
     _ants.push_back(ant);
   }
 }
