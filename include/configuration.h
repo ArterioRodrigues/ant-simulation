@@ -17,6 +17,7 @@ public:
   static double frameRate;
   static int colonySize;
   static int foodSize;
+  static int pheromoneLimit;
 
   static int movementDistance;
   static int foodCount;

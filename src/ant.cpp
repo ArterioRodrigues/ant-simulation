@@ -41,7 +41,6 @@ Direction Ant::getDirectionToward(sf::Vector2f target) {
 }
 
 void Ant::update(sf::Time deltaTime) {
-
   sf::Vector2f antPosition = _sprite.getPosition();
 
   type = _foodCount ? AntType::Found : AntType::Searching;
@@ -53,13 +52,13 @@ void Ant::update(sf::Time deltaTime) {
     move(_movementDistance, _sprite.getRotation());
 
     for (auto entity : Configuration::world->getEntities()) {
-      sf::Vector2f position = entity.second.circle.getPosition();
+      sf::Vector2f position = entity.circle.getPosition();
       if (antPosition.x > position.x - Configuration::foodSize &&
           antPosition.x < position.x + Configuration::foodSize &&
           antPosition.y > position.y - Configuration::foodSize &&
           antPosition.y < position.y + Configuration::foodSize) {
         _foodCount += 1;
-         Configuration::world->decrementFood(entity.first);
+         //Configuration::world->decrementFood(entity.first);
       }
     }
   } else {
@@ -108,8 +107,8 @@ bool Ant::move(int distance, sf::Angle angle) {
 
 void Ant::followPheromones() {
   int index = 0;
-  int numSamples = 8;
-  int searchRadius = _movementDistance * 3;
+  int numSamples = 4;
+  int searchRadius = _movementDistance ;
 
   float maxStrength = 0;
 

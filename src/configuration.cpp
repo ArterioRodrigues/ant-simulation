@@ -12,7 +12,7 @@ int Configuration::colonySize = 0;
 int Configuration::foodCount = 0;
 int Configuration::foodSize = 0;
 int Configuration::movementDistance = 0;
-
+int Configuration::pheromoneLimit = 0;
 bool Configuration::toHomePheromones = false;
 bool Configuration::toFoodPheromones = false;
 
@@ -26,9 +26,10 @@ Configuration::Configuration() {
   Configuration::windowX = 1000;
   Configuration::windowY = 800;
 
-  Configuration::frameRate = 30;
+  Configuration::frameRate = 60;
   Configuration::foodCount = 1;
 
+  Configuration::pheromoneLimit = 10000;
   Configuration::foodSize = 5;
   Configuration::colonySize = 50;
   Configuration::movementDistance = 20;

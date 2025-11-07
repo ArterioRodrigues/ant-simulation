@@ -54,24 +54,24 @@ void Game::render() {
 
   if (Configuration::toFoodPheromones) {
     for (auto entity : Configuration::world->getToFoodPheromones()) {
-      _window.draw(entity.second.circle);
+      _window.draw(entity.circle);
     }
   }
 
   if (Configuration::toHomePheromones) {
     for (auto entity : Configuration::world->getToHomePheromones()) {
-      _window.draw(entity.second.circle);
+      _window.draw(entity.circle);
     }
   }
 
   for (auto entity : Configuration::world->getEntities()) {
-    _window.draw(entity.second.circle);
+    _window.draw(entity.circle);
   }
 
-  for (auto &ant : Configuration::world->getColony().getAnts()) {
-    sf::Vector2f antPosition = ant->getPosition();
+  for (Ant *ant : Configuration::world->getColony().getAnts()) {
     _window.draw(*ant);
   }
+
   _window.draw(Configuration::world->getColonyEntity().circle);
   _window.draw(text);
   _window.display();
