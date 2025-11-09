@@ -33,6 +33,18 @@ public:
     return nearby;
   }
 
+  std::vector<T> getSubCellVector(sf::Vector2f position) {
+    std::vector<T> cell = {};
+
+    auto cellPosition = getCell(position);
+    auto it = _grid.find(cellPosition);
+    if (it != _grid.end()) {
+      cell.insert(cell.end(), it->second.begin(), it->second.end());
+    }
+
+    return cell;
+  }
+
   size_t size() const {
     size_t total = 0;
     for (const auto &[cell, entities] : _grid) {
@@ -74,9 +86,6 @@ public:
         }
       }
     }
-  }
-  std::vector<T>& getSubCellVector(sf::Vector2f position) {
-      return _grid[getCell(position)];
   }
   std::pair<int, int> getCell(sf::Vector2f position) const {
     return {

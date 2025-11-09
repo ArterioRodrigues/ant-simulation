@@ -24,6 +24,7 @@ public:
 
   static bool toHomePheromones;
   static bool toFoodPheromones;
+  static bool enableMultitThreading;
 
   static sf::Color foodColor;
   static sf::Color colonyColor;

@@ -1,8 +1,12 @@
+#pragma once
 #include "pch.h"
+
+float randomNumberGenerator(float start, float end);
 int randomNumberGenerator(int start, int end);
-int weightedRandomGenerator(const std::vector<uint8_t>& weights);
+int weightedRandomGenerator(const std::vector<uint8_t> &weights);
+
 class ThreadSafeRandom {
 public:
-    static int generate(int start, int end);
-    static int weightedGenerate(const std::vector<uint8_t>& weights);
+  static int generate(int start, int end);
+  static int weightedGenerate(const std::vector<uint8_t> &weights);
 };

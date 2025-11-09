@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include <SFML/Graphics/CircleShape.hpp>
 
 enum AntType {
   Searching,
@@ -18,6 +17,8 @@ enum Direction {
   NorthWest = 7,
 };
 
+struct PheromoneData;
+
 class Ant : public sf::Drawable {
 public:
   Ant(const Ant &) = delete;
@@ -25,12 +26,11 @@ public:
   Ant(int movementDistance, sf::Vector2f position, sf::Vector2f colonyPosition);
 
   void processEvent();
-  void update(sf::Time deltaTime);
 
   bool move(int distance, sf::Angle angle);
   void setFoodCount(int foodCount);
   int getFoodCount();
-  void followPheromones();
+  bool followPheromones();
   sf::Vector2f getPosition();
 
   void rotate(Direction direction);
@@ -39,6 +39,9 @@ public:
 
   Direction getDirectionToward(sf::Vector2f target);
   Direction getDirectionFromAngle(float angle);
+
+  std::vector<PheromoneData> update(sf::Time deltaTime);
+  float getAngleFromDirection(Direction direction);
 
 private:
   void draw(sf::RenderTarget &target, sf::RenderStates states = sf::RenderStates::Default) const override;
@@ -52,4 +55,7 @@ private:
   sf::Time _deltaTime;
   sf::CircleShape _food;
   Direction _lastDirection;
+
+  std::vector<sf::Vector2f> _recentPositions;
+  int _stuckCounter;
 };

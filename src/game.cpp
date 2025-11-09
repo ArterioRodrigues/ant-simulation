@@ -50,7 +50,7 @@ void Game::update(sf::Time deltaTime) { Configuration::world->update(deltaTime);
 void Game::render() {
   Text text(std::to_string(Configuration::world->getFoodCount()));
 
-  _window.clear();
+  _window.clear(Configuration::normalColor);
 
   if (Configuration::toFoodPheromones) {
     for (auto entity : Configuration::world->getToFoodPheromones()) {
@@ -74,5 +74,6 @@ void Game::render() {
 
   _window.draw(Configuration::world->getColonyEntity().circle);
   _window.draw(text);
+
   _window.display();
 }

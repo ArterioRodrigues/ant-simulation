@@ -18,4 +18,6 @@ private:
   int _foodCount;
   sf::Vector2f _spawnPoint;
   std::vector<Ant *> _ants;
+  void updateAntsParallel(sf::Time deltaTime);
+  void updateAntsSingleThreaded(sf::Time deltaTime);
 };
