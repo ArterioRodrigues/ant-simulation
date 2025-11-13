@@ -4,7 +4,6 @@
 #include "world.h"
 
 Colony::Colony(int size, const sf::Vector2f spawnPoint) {
-  std::cout << spawnPoint.x  << "  "<< spawnPoint.y << std::endl;
   _size = size;
   _spawnPoint = {spawnPoint.x, spawnPoint.y };
 
