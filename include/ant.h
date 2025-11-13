@@ -25,23 +25,17 @@ public:
   Ant &operator=(const Ant &) = delete;
   Ant(int movementDistance, sf::Vector2f position, sf::Vector2f colonyPosition);
 
-  void processEvent();
-
   bool move(int distance, sf::Angle angle);
   void setFoodCount(int foodCount);
-  int getFoodCount();
   bool followPheromones();
-  sf::Vector2f getPosition();
 
   void rotate(Direction direction);
   void returnHome();
   AntType type;
 
-  Direction getDirectionToward(sf::Vector2f target);
   Direction getDirectionFromAngle(float angle);
 
   std::vector<PheromoneData> update(sf::Time deltaTime);
-  float getAngleFromDirection(Direction direction);
 
 private:
   void draw(sf::RenderTarget &target, sf::RenderStates states = sf::RenderStates::Default) const override;

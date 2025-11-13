@@ -20,7 +20,6 @@ void Game::run(int frameRate) {
       timeSinceLastUpdate -= timePerFrame;
       update(timePerFrame);
     }
-    // update(timeSinceLastUpdate);
     render();
   }
 }
@@ -48,8 +47,7 @@ void Game::processEvents() {
 void Game::update(sf::Time deltaTime) { Configuration::world->update(deltaTime); }
 
 void Game::render() {
-  Text text(std::to_string(Configuration::world->getFoodCount()));
-
+  Text text(std::to_string(Configuration::world->getColony()->getFoodCount()));
   _window.clear(Configuration::normalColor);
 
   if (Configuration::toFoodPheromones) {
@@ -68,7 +66,7 @@ void Game::render() {
     _window.draw(entity.circle);
   }
 
-  for (Ant *ant : Configuration::world->getColony().getAnts()) {
+  for (Ant *ant : Configuration::world->getColony()->getAnts()) {
     _window.draw(*ant);
   }
 

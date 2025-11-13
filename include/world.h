@@ -17,6 +17,7 @@ struct Entity {
   sf::CircleShape circle;
   EntityTypes type;
   int id;
+  int health;
 };
 
 struct PheromoneData {
@@ -37,14 +38,13 @@ public:
   const std::vector<Entity> getToFoodPheromones(sf::Vector2f position);
   float getPheromoneStrength(sf::Vector2f position, enum Pheromones pheromoneType);
   Entity getColonyEntity();
-  class Colony getColony();
+  class Colony* getColony();
 
   void batchInsertPheromones(const std::vector<PheromoneData> &pheromones);
   void setPhemromone(sf::Vector2f position, enum Pheromones type = Pheromones::toFood);
   void update(sf::Time deltaTime);
 
   void decrementFood(int index);
-  int getFoodCount();
 
 private:
   int _worldX;
@@ -62,7 +62,7 @@ private:
   SpatialHash<Entity> _toFoodPheromones;
   SpatialHash<Entity> _toHomePheromones;
 
-  class Colony _colony;
+  class Colony* _colony;
 
   std::mutex _pheromoneMutex;
 };

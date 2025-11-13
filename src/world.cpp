@@ -1,21 +1,20 @@
 #include "world.h"
 #include "configuration.h"
 #include "helper.h"
-#include <SFML/System/Vector2.hpp>
 
 int World::_id = 0;
 
-World::World(int windowX, int windowY, int colonySize, int foodCount)
-    : _toFoodPheromones(), _toHomePheromones(),
-      _colony(colonySize, sf::Vector2f({float(randomNumberGenerator(100, windowX - 100)),
-                                        float(randomNumberGenerator(100, windowY - 100))})) {
+World::World(int windowX, int windowY, int colonySize, int foodCount) : _toFoodPheromones(), _toHomePheromones() {
+  _colony = new class Colony(colonySize, sf::Vector2f({float(randomNumberGenerator(100, windowX - 100)),
+                                                       float(randomNumberGenerator(100, windowY - 100))}));
+
   _worldX = windowX;
   _worldY = windowY;
   _foodCount = foodCount;
 
   _deltaTime = sf::Time::Zero;
 
-  sf::Vector2f colonyPosition = _colony.getPosition();
+  sf::Vector2f colonyPosition = _colony->getPosition();
   _colonyEntity.circle.setRadius(30);
   _colonyEntity.circle.setOrigin({30, 30});
   _colonyEntity.circle.setFillColor(Configuration::colonyColor);
@@ -32,6 +31,7 @@ World::World(int windowX, int windowY, int colonySize, int foodCount)
     food.circle.setFillColor(Configuration::foodColor);
     food.circle.setPosition(circlePosition);
     food.id = _id++;
+    food.health = 100;
     _entities.insert(circlePosition, food);
   }
 }
@@ -69,7 +69,7 @@ float World::getPheromoneStrength(sf::Vector2f position, enum Pheromones pheromo
   double result = 0;
   if (pheromoneType == Pheromones::toFood) {
     std::vector<Entity> pheromones = _toFoodPheromones.getSubCellVector(position);
-    sf::Vector2f colonyPosition = _colony.getPosition();
+    sf::Vector2f colonyPosition = _colony->getPosition();
 
     for (auto pheromone : pheromones) {
       sf::Color color = pheromone.circle.getFillColor();
@@ -117,6 +117,25 @@ const std::vector<Entity> World::getToFoodPheromones(sf::Vector2f position) {
 }
 
 void World::decrementFood(int id) {
+  bool shouldRemove = false;
+
+  _entities.forEach([id, &shouldRemove](Entity &entity) -> void {
+    int health = entity.health;
+    float radius = entity.circle.getRadius();
+
+    if (health <= 1) {
+      shouldRemove = true;
+    }
+
+    if (entity.id == id) {
+      health--;
+      float newRadius = radius * health / 100;
+      entity.circle.setRadius(newRadius);
+      entity.circle.setOrigin(sf::Vector2f(newRadius, newRadius));
+    }
+  });
+
+  if (!shouldRemove) return;
   _entities.remove([id](Entity &entity) -> bool {
     if (entity.id == id) {
       return true;
@@ -126,43 +145,42 @@ void World::decrementFood(int id) {
 }
 
 void World::update(sf::Time deltaTime) {
-  _colony.update(deltaTime);
+  _colony->update(deltaTime);
 
-  _toFoodPheromones.forEach([](Entity &entity) -> void {
-    sf::Color color = entity.circle.getFillColor();
-    color.r = std::min(255, color.r + 1);
-    color.g = std::min(255, color.g + 1);
-    color.b = std::min(255, color.b + 1);
+  //_toFoodPheromones.forEach([](Entity &entity) -> void {
+  //  sf::Color color = entity.circle.getFillColor();
+  //  color.r = std::min(255, color.r + 1);
+  //  color.g = std::min(255, color.g + 1);
+  //  color.b = std::min(255, color.b + 1);
 
-    entity.circle.setFillColor(color);
-  });
+  //  entity.circle.setFillColor(color);
+  //});
 
-  _toFoodPheromones.remove([](Entity &entity) -> bool {
-    sf::Color color = entity.circle.getFillColor();
-    if (color.r > 254 && color.g > 254 && color.b > 254) {
-      return true;
-    }
-    return false;
-  });
+  //_toFoodPheromones.remove([](Entity &entity) -> bool {
+  //  sf::Color color = entity.circle.getFillColor();
+  //  if (color.r > 254 && color.g > 254 && color.b > 254) {
+  //    return true;
+  //  }
+  //  return false;
+  //});
 
-  _toHomePheromones.forEach([](Entity &entity) -> void {
-    sf::Color color = entity.circle.getFillColor();
-    color.r = std::min(255, color.r + 1);
-    color.g = std::min(255, color.g + 1);
-    color.b = std::min(255, color.b + 1);
+  //_toHomePheromones.forEach([](Entity &entity) -> void {
+  //  sf::Color color = entity.circle.getFillColor();
+  //  color.r = std::min(255, color.r + 1);
+  //  color.g = std::min(255, color.g + 1);
+  //  color.b = std::min(255, color.b + 1);
 
-    entity.circle.setFillColor(color);
-  });
+  //  entity.circle.setFillColor(color);
+  //});
 
-  _toHomePheromones.remove([](Entity &entity) -> bool {
-    sf::Color color = entity.circle.getFillColor();
-    if (color.r > 254 && color.g > 254 && color.b > 254) {
-      return true;
-    }
-    return false;
-  });
+  //_toHomePheromones.remove([](Entity &entity) -> bool {
+  //  sf::Color color = entity.circle.getFillColor();
+  //  if (color.r > 254 && color.g > 254 && color.b > 254) {
+  //    return true;
+  //  }
+  //  return false;
+  //});
 }
 
-int World::getFoodCount() { return 0; }
-class Colony World::getColony() { return _colony; }
+class Colony *World::getColony() { return _colony; }
 Entity World::getColonyEntity() { return _colonyEntity; }

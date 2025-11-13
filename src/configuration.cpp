@@ -28,7 +28,7 @@ Configuration::Configuration() {
   Configuration::windowX = 1000;
   Configuration::windowY = 800;
 
-  Configuration::frameRate = 10;
+  Configuration::frameRate = 24;
   Configuration::foodCount = 3;
   Configuration::foodSize = 5;
 

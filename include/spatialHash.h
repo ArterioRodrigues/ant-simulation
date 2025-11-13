@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include <SFML/System/Vector2.hpp>
 
 struct CellHash {
   std::size_t operator()(const std::pair<int, int> &cell) const {
