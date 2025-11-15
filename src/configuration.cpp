@@ -28,12 +28,12 @@ Configuration::Configuration() {
   Configuration::windowX = 1000;
   Configuration::windowY = 800;
 
-  Configuration::frameRate = 24;
+  Configuration::frameRate = 10;
   Configuration::foodCount = 3;
   Configuration::foodSize = 5;
 
   Configuration::pheromoneLimit = 1000;
-  Configuration::colonySize = 50;
+  Configuration::colonySize = 500;
   Configuration::movementDistance = 20;
 
   Configuration::foodColor = {0, 255, 0};

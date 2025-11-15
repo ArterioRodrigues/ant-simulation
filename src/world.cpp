@@ -147,39 +147,39 @@ void World::decrementFood(int id) {
 void World::update(sf::Time deltaTime) {
   _colony->update(deltaTime);
 
-  //_toFoodPheromones.forEach([](Entity &entity) -> void {
-  //  sf::Color color = entity.circle.getFillColor();
-  //  color.r = std::min(255, color.r + 1);
-  //  color.g = std::min(255, color.g + 1);
-  //  color.b = std::min(255, color.b + 1);
+  _toFoodPheromones.forEach([](Entity &entity) -> void {
+     sf::Color color = entity.circle.getFillColor();
+     color.r = std::min(255, color.r + 1);
+     color.g = std::min(255, color.g + 1);
+     color.b = std::min(255, color.b + 1);
 
-  //  entity.circle.setFillColor(color);
-  //});
+     entity.circle.setFillColor(color);
+   });
 
-  //_toFoodPheromones.remove([](Entity &entity) -> bool {
-  //  sf::Color color = entity.circle.getFillColor();
-  //  if (color.r > 254 && color.g > 254 && color.b > 254) {
-  //    return true;
-  //  }
-  //  return false;
-  //});
+   _toFoodPheromones.remove([](Entity &entity) -> bool {
+     sf::Color color = entity.circle.getFillColor();
+     if (color.r > 254 && color.g > 254 && color.b > 254) {
+       return true;
+     }
+     return false;
+   });
 
-  //_toHomePheromones.forEach([](Entity &entity) -> void {
-  //  sf::Color color = entity.circle.getFillColor();
-  //  color.r = std::min(255, color.r + 1);
-  //  color.g = std::min(255, color.g + 1);
-  //  color.b = std::min(255, color.b + 1);
+  _toHomePheromones.forEach([](Entity &entity) -> void {
+     sf::Color color = entity.circle.getFillColor();
+     color.r = std::min(255, color.r + 1);
+     color.g = std::min(255, color.g + 1);
+     color.b = std::min(255, color.b + 1);
 
-  //  entity.circle.setFillColor(color);
-  //});
+     entity.circle.setFillColor(color);
+   });
 
-  //_toHomePheromones.remove([](Entity &entity) -> bool {
-  //  sf::Color color = entity.circle.getFillColor();
-  //  if (color.r > 254 && color.g > 254 && color.b > 254) {
-  //    return true;
-  //  }
-  //  return false;
-  //});
+   _toHomePheromones.remove([](Entity &entity) -> bool {
+     sf::Color color = entity.circle.getFillColor();
+     if (color.r > 254 && color.g > 254 && color.b > 254) {
+       return true;
+     }
+     return false;
+   });
 }
 
 class Colony *World::getColony() { return _colony; }
